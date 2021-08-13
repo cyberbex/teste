@@ -6,7 +6,7 @@ const caminhoArquivo = path.resolve(__dirname,'.' ,'valores.json');
 
 
 //Porta que o server irá escutar
-const port = 80;
+const port = 3000;
 var valores = [];
 
 app.use(express.static(__dirname + ''));
@@ -14,11 +14,14 @@ app.use(express.static(__dirname + ''));
 
 app.get('/',(req,res)=>{
     res.sendFile(__dirname+'./index.html')
+    
 });
 
 app.get('/sensores/:temp?/:humidade?/:adc?',(req,res)=>{
     
-    console.log(req.query.temp);
+   console.log(req.query.temp);
+   console.log(req.query.humidade);
+   console.log(req.query.adc);
   //const json = req.query;
   
   valores[0] = req.query.temp;
@@ -27,16 +30,18 @@ app.get('/sensores/:temp?/:humidade?/:adc?',(req,res)=>{
   
   var valorEsp = [
 
-      { id:1, label:'temperatura', temperatura: valores[0]},
-      { id:2, label:'humidade',humidade: valores[1]},
-      { id:3, label:'adc',adc: valores[2]},
+      { id:1, label:'temperatura', valor: valores[0]},
+      { id:2, label:'humidade',valor: valores[1]},
+      { id:3, label:'adc',valor: valores[2]},
   ];
   
   const json = JSON.stringify(valorEsp);
 
   fs.writeFile(caminhoArquivo, json , { flag: 'w' });
+
+  res.send(valores[0]);
   
-});
+}); 
 
 
 app.listen(port, () => {
